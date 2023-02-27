@@ -104,7 +104,7 @@ jobs:
           echo -e "==> \033[1mCercube v${{ inputs.cercube_version }} downloaded! \033[0m"
           wget "$YOUTUBE_URL" --no-verbose -O main/YouTube.ipa
           echo -e "==> \033[1mYouTube v${{ inputs.youtube_version }} downloaded! \033[0m"
-          ar -x "main/Tweaks/Cercube/me.alfhaily.cercube_${{ env.CERCUBE_VERSION }}_iphoneos-arm.deb" main/Tweaks/Cercube/
+          ar -x "me.alfhaily.cercube_${{ env.CERCUBE_VERSION }}_iphoneos-arm.deb" main/Tweaks/Cercube/
           unzip -q main/YouTube.ipa -d main/tmp
           rm -rf main/tmp/Payload/YouTube.app/_CodeSignature/CodeResources
           rm -rf main/tmp/Payload/YouTube.app/PlugIns/*
