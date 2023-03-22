@@ -11,16 +11,6 @@ on:
         default: "5.3.11"
         required: true
         type: string
-      decrypted_youtube_url:
-        description: "The direct URL to the decrypted YouTube ipa"
-        default: ""
-        required: true
-        type: string
-      youtube_version:
-        description: "The version of YouTube"
-        default: ""
-        required: true
-        type: string
       bundle_id:
         description: "Modify the bundle ID. Not recommended"
         default: "com.google.ios.youtube"
@@ -102,11 +92,8 @@ jobs:
           curl "https://raw.githubusercontent.com/Muirey03/RemoteLog/master/RemoteLog.h" --output "$THEOS/include/RemoteLog.h"
           curl "https://dl.dropboxusercontent.com/s/b01erqbp3ajc5e2/me.alfhaily.cercube_${{ env.CERCUBE_VERSION }}_iphoneos-arm.deb" --output "main/Tweaks/Cercube/me.alfhaily.cercube_${{ env.CERCUBE_VERSION }}_iphoneos-arm.deb"
           echo -e "==> \033[1mCercube v${{ inputs.cercube_version }} downloaded! \033[0m"
-          wget "$YOUTUBE_URL" --no-verbose -O main/YouTube.ipa
-          echo -e "==> \033[1mYouTube v${{ inputs.youtube_version }} downloaded! \033[0m"
           dpkg-deb -x "main/Tweaks/Cercube/me.alfhaily.cercube_${{ env.CERCUBE_VERSION }}_iphoneos-arm.deb" main/Tweaks/Cercube/
-          unzip -q main/YouTube.ipa -d main/tmp
-          dpkg-deb --build com.arichorn.cercubeplusextra
+          dpkg-deb --build com.arichorn.cercubeplusextra main/control
           rm -rf main/tmp/Payload/YouTube.app/_CodeSignature/CodeResources
           rm -rf main/tmp/Payload/YouTube.app/PlugIns/*
           cp -R main/Extensions/*.appex main/tmp/Payload/YouTube.app/PlugIns
@@ -114,7 +101,6 @@ jobs:
         env:
           THEOS: ${{ github.workspace }}/theos
           CERCUBE_VERSION: ${{ inputs.cercube_version }}
-          YOUTUBE_VERSION: ${{ inputs.youtube_version }}
           YOUTUBE_URL: ${{ inputs.decrypted_youtube_url }}
 
       - name: Fix Compiling & Build Package
@@ -132,7 +118,6 @@ jobs:
         env:
           THEOS: ${{ github.workspace }}/theos
           CERCUBE_VERSION: ${{ inputs.cercube_version }}
-          YOUTUBE_VERSION: ${{ inputs.youtube_version }}
           BUNDLE_ID: ${{ inputs.bundle_id }}
           APP_NAME: ${{ inputs.app_name }}
 
@@ -140,9 +125,8 @@ jobs:
         uses: actions/upload-artifact@v3.1.2
         env:
           CERCUBE_VERSION: ${{ inputs.cercube_version }}
-          YOUTUBE_VERSION: ${{ inputs.youtube_version }}
         with:
-          name: CercubePlus_${{ env.YOUTUBE_VERSION }}_${{ env.CERCUBE_VERSION }}
+          name: CercubePlus_${{ env.CERCUBE_VERSION }}
           path: ${{ github.workspace }}/main/packages/${{ steps.build_package.outputs.package }}
           if-no-files-found: error
 
@@ -155,7 +139,7 @@ jobs:
           YOUTUBE_VERSION: ${{ inputs.youtube_version }}
           DRAFT: ${{ inputs.create_release }}
         with:
-          tag_name: v${{ env.YOUTUBE_VERSION }}-${{ env.CERCUBE_VERSION }}-(${{ github.run_number }})
-          name: v${{ env.YOUTUBE_VERSION }}-${{ env.CERCUBE_VERSION }}-(${{ github.run_number }})
+          tag_name: v${{ env.CERCUBE_VERSION }}-(${{ github.run_number }})
+          name: v${{ env.CERCUBE_VERSION }}-(${{ github.run_number }})
           files: main/packages/*.deb
           draft: ${{ env.DRAFT }}
