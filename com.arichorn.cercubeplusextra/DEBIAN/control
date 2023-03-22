@@ -1,9 +1,0 @@
-Package: com.arichorn.cercubeplusextra
-Name: CercubePlusExtra
-Version: 18.09.4
-Maintainer: arichorn
-Author: arichorn
-Section: Tweaks
-Architecture: iphoneos-arm
-Description: CercubePlusExtra v18.09.4 Tweak for deb use only.
-Depends: mobilesubstrate (>= 0.9.5000), firmware (>= 11.0)
